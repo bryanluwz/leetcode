@@ -103,10 +103,59 @@ class Solution:
 
         return mem[len(obstacleGrid) - 1][len(obstacleGrid[0]) - 1]
 
+    # 20230813: Check if There is a Valid Partition For The Array https://leetcode.com/problems/check-if-there-is-a-valid-partition-for-the-array/
+    def validPartition(self, nums: list[int]) -> bool:
+        # DP: mem contains two axis, mem[i][j] shows whether nums[i:j] is valid or not
+        mem = [[False] * (len(nums) + 1) for _ in range(len(nums) + 1)]
+
+        # Fill up base case first
+        # for i in range(len(mem)):
+        #     for j in range(len(mem)):
+        #         if 2 <= j - i <= 3:
+        #             mem[i][j] |= all(elem == nums[i] for elem in nums[i:j])
+        #             mem[i][j] |= all(
+        #                 nums[k] - nums[k - 1] == 1
+        #                 for k in range(i + 1, j)) if j - i == 3 else False
+
+        for i in range(len(mem)):
+            if i < len(mem) - 2:
+                mem[i][i + 2] = all(elem == nums[i] for elem in nums[i:i + 2])
+
+            if i < len(mem) - 3:
+                mem[i][i + 3] = all(elem == nums[i] for elem in nums[i:i + 3])
+                mem[i][i + 3] |= nums[i + 2] - nums[i + 1] == nums[
+                    i + 1] - nums[i] == 1
+
+        for i in range(len(mem)):
+            for j in range(i + 3, len(mem)):
+                if i > j:
+                    continue
+                elif 2 <= j - i <= 3:
+                    pass
+                else:
+                    mem[i][j] = (mem[i][j - 2]
+                                 and mem[j - 2][j]) or (mem[i][j - 3]
+                                                        and mem[j - 3][j])
+
+        # Returns mem[0][-1]
+        # print(nums)
+
+        # print("i", end="")
+        # [print(f"{i:6}", end="") for i in range(len(mem))]
+        # print()
+
+        # for k, i in enumerate(mem):
+        #     print(k, end=" ")
+        #     for j in i:
+        #         print(f"{str(j):6}", end="")
+        #     print()
+
+        return mem[0][-1]
+
     # Main function
     def main(self):
-        grid = [[0, 0]]
-        print(self.uniquePathsWithObstacles(grid))
+        arr = [348054, 7876, 34051]
+        print(self.validPartition(arr))
 
 
 solution = Solution()
