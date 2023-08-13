@@ -105,56 +105,34 @@ class Solution:
 
     # 20230813: Check if There is a Valid Partition For The Array https://leetcode.com/problems/check-if-there-is-a-valid-partition-for-the-array/
     def validPartition(self, nums: list[int]) -> bool:
-        # DP: mem contains two axis, mem[i][j] shows whether nums[i:j] is valid or not
-        mem = [[False] * (len(nums) + 1) for _ in range(len(nums) + 1)]
+        # Use sliding window of size three to scan through array
+        mem = [True, False, nums[0] == nums[1] if len(nums) > 1 else False]
 
-        # Fill up base case first
-        # for i in range(len(mem)):
-        #     for j in range(len(mem)):
-        #         if 2 <= j - i <= 3:
-        #             mem[i][j] |= all(elem == nums[i] for elem in nums[i:j])
-        #             mem[i][j] |= all(
-        #                 nums[k] - nums[k - 1] == 1
-        #                 for k in range(i + 1, j)) if j - i == 3 else False
+        # mem[0] is validity of partition nums[0:i-2]
+        # mem[1] is validity of partition nums[0:i-1]
+        # mem[2] is validity of partition nums[0:i]
 
-        for i in range(len(mem)):
-            if i < len(mem) - 2:
-                mem[i][i + 2] = all(elem == nums[i] for elem in nums[i:i + 2])
+        for i in range(2, len(nums)):
+            cur = False
 
-            if i < len(mem) - 3:
-                mem[i][i + 3] = all(elem == nums[i] for elem in nums[i:i + 3])
-                mem[i][i + 3] |= nums[i + 2] - nums[i + 1] == nums[
-                    i + 1] - nums[i] == 1
+            # Check for two equal elem
+            cur |= nums[i] == nums[i - 1] and mem[1]
 
-        for i in range(len(mem)):
-            for j in range(i + 3, len(mem)):
-                if i > j:
-                    continue
-                elif 2 <= j - i <= 3:
-                    pass
-                else:
-                    mem[i][j] = (mem[i][j - 2]
-                                 and mem[j - 2][j]) or (mem[i][j - 3]
-                                                        and mem[j - 3][j])
+            # Check for three equal elem
+            cur |= nums[i] == nums[i - 1] == nums[i - 2] and mem[0]
 
-        # Returns mem[0][-1]
-        # print(nums)
+            # Check for consec
+            cur |= nums[i] - nums[i - 1] == 1 and nums[i - 1] - nums[
+                i - 2] == 1 and mem[0]
 
-        # print("i", end="")
-        # [print(f"{i:6}", end="") for i in range(len(mem))]
-        # print()
+            # Move window forward
+            mem[0], mem[1], mem[2] = mem[1], mem[2], cur
 
-        # for k, i in enumerate(mem):
-        #     print(k, end=" ")
-        #     for j in i:
-        #         print(f"{str(j):6}", end="")
-        #     print()
-
-        return mem[0][-1]
+        return mem[2]
 
     # Main function
     def main(self):
-        arr = [348054, 7876, 34051]
+        arr = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
         print(self.validPartition(arr))
 
 
