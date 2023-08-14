@@ -130,10 +130,16 @@ class Solution:
 
         return mem[2]
 
+    # 20230814: Kth Largest Element in an Array https://leetcode.com/problems/kth-largest-element-in-an-array/
+    def findKthLargest(self, nums: list[int], k: int) -> int:
+        # IDK man
+        nums.sort()
+        return nums[-k]
+
     # Main function
     def main(self):
-        arr = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
-        print(self.validPartition(arr))
+        arr = [3, 2, 3, 1, 2, 4, 5, 5, 6]
+        print(self.findKthLargest(arr, 4))
 
 
 solution = Solution()
