@@ -1,5 +1,9 @@
 # This file is for LeetCode daily challenge for the August 2023.
 # Language of the month: Python
+from python_extra_classes import *
+
+
+# Solution Class
 class Solution:
 
     # 20230810: Search in Rotated Sorted Array II https://leetcode.com/problems/search-in-rotated-sorted-array-ii/
@@ -136,10 +140,50 @@ class Solution:
         nums.sort()
         return nums[-k]
 
+    # 20230815: Partition List https://leetcode.com/problems/partition-list/
+    def partition(self, head: ListNode, x: int) -> ListNode:
+        if not head:
+            return None
+
+        smaller = None
+        larger = None
+
+        cur = head
+        smaller_tail = None
+        larger_tail = None
+
+        while cur:
+            if cur.val < x:
+                if not smaller:
+                    smaller = ListNode(cur.val)
+                    smaller_tail = smaller
+                else:
+                    smaller_tail.next = ListNode(cur.val)
+                    smaller_tail = smaller_tail.next
+            elif cur.val >= x:
+                if not larger:
+                    larger = ListNode(cur.val)
+                    larger_tail = larger
+                else:
+                    larger_tail.next = ListNode(cur.val)
+                    larger_tail = larger_tail.next
+            cur = cur.next
+
+        # ListNode.concat(smaller, larger)
+        if smaller_tail:
+            smaller_tail.next = larger
+            return smaller
+        else:
+            return larger
+
     # Main function
     def main(self):
-        arr = [3, 2, 3, 1, 2, 4, 5, 5, 6]
-        print(self.findKthLargest(arr, 4))
+        arr = [1, 4, 3, 2, 5, 2]
+        # print(self.partition(ListNode.from_list(arr), 3))
+
+        head = ListNode.from_list(arr)
+
+        self.partition(head, 3).print()
 
 
 solution = Solution()
