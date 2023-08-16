@@ -169,21 +169,38 @@ class Solution:
                     larger_tail = larger_tail.next
             cur = cur.next
 
-        # ListNode.concat(smaller, larger)
         if smaller_tail:
             smaller_tail.next = larger
             return smaller
         else:
             return larger
 
+    def maxSlidingWindow(self, nums: list[int], k: int) -> list[int]:
+        window_max = []
+        queue = []
+
+        for i in range(len(nums)):
+            # Remove previous elem if max is out of window
+            while queue and queue[0] <= i - k:
+                queue.pop(0)
+
+            # Remove smaller elem if current elem is larger
+            while queue and nums[queue[-1]] < nums[i]:
+                queue.pop()
+
+            # Add current elem index to queue
+            queue.append(i)
+
+            # Add max to window once sliding window is of starting index k - 1, i represents ending index of sliding window
+            if i >= k - 1:
+                window_max.append(nums[queue[0]])
+
+        return window_max
+
     # Main function
     def main(self):
-        arr = [1, 4, 3, 2, 5, 2]
-        # print(self.partition(ListNode.from_list(arr), 3))
-
-        head = ListNode.from_list(arr)
-
-        self.partition(head, 3).print()
+        arr = [9, 10, 9, -7, -4, -8, 2, -6]
+        print(self.maxSlidingWindow(arr, 5))
 
 
 solution = Solution()
