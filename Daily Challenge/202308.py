@@ -197,10 +197,43 @@ class Solution:
 
         return window_max
 
+    # 20230817: 01-Matrix https://leetcode.com/problems/01-matrix/
+    def updateMatrix(self, mat: list[list[int]]) -> list[list[int]]:
+        result = [[float('inf') for _ in range(len(mat[0]))]
+                  for _ in range(len(mat))]
+
+        # Top left to bottom right
+        for y in range(len(mat)):
+            for x in range(len(mat[0])):
+                if mat[y][x] == 0:
+                    result[y][x] = 0
+                else:
+                    if y - 1 >= 0:
+                        result[y][x] = min(result[y][x], result[y - 1][x] + 1)
+                    if x - 1 >= 0:
+                        result[y][x] = min(result[y][x], result[y][x - 1] + 1)
+
+        # Bottom right to top left
+        for y in range(len(mat) - 1, -1, -1):
+            for x in range(len(mat[0]) - 1, -1, -1):
+                if mat[y][x] == 0:
+                    result[y][x] = 0
+                else:
+                    if y + 1 < len(mat):
+                        result[y][x] = min(result[y][x], result[y + 1][x] + 1)
+                    if x + 1 < len(mat[0]):
+                        result[y][x] = min(result[y][x], result[y][x + 1] + 1)
+
+        return result
+
     # Main function
     def main(self):
-        arr = [9, 10, 9, -7, -4, -8, 2, -6]
-        print(self.maxSlidingWindow(arr, 5))
+        arr = [[1, 1, 0, 0, 1, 0, 0, 1, 1, 0], [1, 0, 0, 1, 0, 1, 1, 1, 1, 1],
+               [1, 1, 1, 0, 0, 1, 1, 1, 1, 0], [0, 1, 1, 1, 0, 1, 1, 1, 1, 1],
+               [0, 0, 1, 1, 1, 1, 1, 1, 1, 0], [1, 1, 1, 1, 1, 1, 0, 1, 1, 1],
+               [0, 1, 1, 1, 1, 1, 1, 0, 0, 1], [1, 1, 1, 1, 1, 0, 0, 1, 1, 1],
+               [0, 1, 0, 1, 1, 0, 1, 1, 1, 1], [1, 1, 1, 0, 1, 0, 1, 1, 1, 1]]
+        print(self.updateMatrix(arr))
 
 
 solution = Solution()
