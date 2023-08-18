@@ -226,14 +226,29 @@ class Solution:
 
         return result
 
+    # 20230818: Maximal Network Rank https://leetcode.com/problems/maximal-network-rank/
+    def maximalNetworkRank(self, n: int, roads: list[list[int]]) -> int:
+        # Calculate degrees
+        degrees_list = [0 for _ in range(n)]
+        for i in range(n):
+            for pairs in roads:
+                if i in pairs:
+                    degrees_list[i] += 1
+
+        # Find total links for each pair
+        network_links = []
+        for i in range(n):
+            for j in range(i + 1, n):
+                network_links.append(degrees_list[i] + degrees_list[j])
+                if [i, j] in roads or [j, i] in roads:
+                    network_links[-1] -= 1
+
+        return max(network_links)
+
     # Main function
     def main(self):
-        arr = [[1, 1, 0, 0, 1, 0, 0, 1, 1, 0], [1, 0, 0, 1, 0, 1, 1, 1, 1, 1],
-               [1, 1, 1, 0, 0, 1, 1, 1, 1, 0], [0, 1, 1, 1, 0, 1, 1, 1, 1, 1],
-               [0, 0, 1, 1, 1, 1, 1, 1, 1, 0], [1, 1, 1, 1, 1, 1, 0, 1, 1, 1],
-               [0, 1, 1, 1, 1, 1, 1, 0, 0, 1], [1, 1, 1, 1, 1, 0, 0, 1, 1, 1],
-               [0, 1, 0, 1, 1, 0, 1, 1, 1, 1], [1, 1, 1, 0, 1, 0, 1, 1, 1, 1]]
-        print(self.updateMatrix(arr))
+        arr = [[0, 1], [0, 3], [1, 2], [1, 3]]
+        print(self.maximalNetworkRank(4, arr))
 
 
 solution = Solution()
