@@ -245,10 +245,70 @@ class Solution:
 
         return max(network_links)
 
+    # 20230819: Find Critical and Pseudo-Critical Edges in Minimum Spanning Tree https://leetcode.com/problems/find-critical-and-pseudo-critical-edges-in-minimum-spanning-tree/
+    # OK I didn't solve this myself, I just copied the solution from the solution tab
+    def findCriticalAndPseudoCriticalEdges(
+            self, n: int, edges: list[list[int]]) -> list[list[int]]:
+
+        class UnionFind:
+
+            def __init__(self, n):
+                self.parent = list(range(n))
+
+            def find_parent(self, p):
+                if self.parent[p] == p:
+                    return p
+                self.parent[p] = self.find_parent(self.parent[p])
+                return self.parent[p]
+
+            def union(self, u, v):
+                pu, pv = self.find_parent(u), self.find_parent(v)
+                self.parent[pu] = pv
+
+        def find_mst(n, edges, block, e):
+            uf = UnionFind(n)
+            weight = 0
+
+            if e != -1:
+                weight += edges[e][2]
+                uf.union(edges[e][0], edges[e][1])
+
+            for i in range(len(edges)):
+                if i == block:
+                    continue
+                if uf.find_parent(edges[i][0]) == uf.find_parent(edges[i][1]):
+                    continue
+                uf.union(edges[i][0], edges[i][1])
+                weight += edges[i][2]
+
+            for i in range(n):
+                if uf.find_parent(i) != uf.find_parent(0):
+                    return float('inf')
+
+            return weight
+
+        critical, pseudo_critical = [], []
+
+        for i in range(len(edges)):
+            edges[i].append(i)
+
+        edges.sort(key=lambda x: x[2])
+
+        mst_wt = find_mst(n, edges, -1, -1)
+
+        for i in range(len(edges)):
+            if mst_wt < find_mst(n, edges, i, -1):
+                critical.append(edges[i][3])
+            elif mst_wt == find_mst(n, edges, -1, i):
+                pseudo_critical.append(edges[i][3])
+
+        return [critical, pseudo_critical]
+
     # Main function
     def main(self):
-        arr = [[0, 1], [0, 3], [1, 2], [1, 3]]
-        print(self.maximalNetworkRank(4, arr))
+        arr = [[0, 1, 1], [1, 2, 1], [2, 3, 2], [0, 3, 2], [0, 4, 3],
+               [3, 4, 3], [1, 4, 6]]
+        print(self.findCriticalAndPseudoCriticalEdges(5, arr))
 
 
 solution = Solution()
