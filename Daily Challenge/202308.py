@@ -304,6 +304,11 @@ class Solution:
 
         return [critical, pseudo_critical]
 
+    # 20230821: Repeated Substring Pattern https://leetcode.com/problems/repeated-substring-pattern/
+    def repeatedSubstringPattern(self, s: str) -> bool:
+        # from https://assets.leetcode.com/users/images/a42cee30-15be-4992-aa71-07bb8adb669c_1656832963.0830936.jpeg
+        return s in (s + s)[1:-1]
+
     # Main function
     def main(self):
         arr = [[0, 1, 1], [1, 2, 1], [2, 3, 2], [0, 3, 2], [0, 4, 3],
