@@ -309,11 +309,27 @@ class Solution:
         # from https://assets.leetcode.com/users/images/a42cee30-15be-4992-aa71-07bb8adb669c_1656832963.0830936.jpeg
         return s in (s + s)[1:-1]
 
+    # 20230822: Excel Sheet Column Title https://leetcode.com/problems/excel-sheet-column-title/
+    def convertToTitle(self, columnNumber: int) -> str:
+        # Column title is 1 index
+        # X Y Z = X * R^2 + Y * R + Z, where R = 26
+        import string
+        uppercase = list(string.ascii_uppercase)
+
+        result = ""
+        columnNumber -= 1
+
+        while columnNumber >= 0:
+            result = uppercase[columnNumber % 26] + result
+            columnNumber = columnNumber // 26 - 1
+
+        return result
+
     # Main function
     def main(self):
         arr = [[0, 1, 1], [1, 2, 1], [2, 3, 2], [0, 3, 2], [0, 4, 3],
                [3, 4, 3], [1, 4, 6]]
-        print(self.findCriticalAndPseudoCriticalEdges(5, arr))
+        print(self.convertToTitle(28))
 
 
 solution = Solution()
