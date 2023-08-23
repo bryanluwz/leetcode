@@ -325,11 +325,51 @@ class Solution:
 
         return result
 
+    # 20230823: Reorganize String https://leetcode.com/problems/reorganize-string/
+    def reorganizeString(self, s: str) -> str:
+        # Store char count in dict
+        common_letters_dict = {}
+        for ch in s:
+            if ch not in common_letters_dict.keys():
+                common_letters_dict[ch] = 1
+            else:
+                common_letters_dict[ch] += 1
+
+        # Convert to list of pairs of char and count
+        common_letters = []
+        for key, val in common_letters_dict.items():
+            common_letters.append([key, val])
+
+        common_letters.sort(key=lambda ls: ls[1])
+
+        # Get the next most common letter, then decrement count, then sort
+        res = ""
+
+        for _ in s:
+            for i in range(len(common_letters)):
+                # Get next common letter, dec count
+                if common_letters[-i - 1][1] > 0:
+                    next_char = common_letters[-i - 1][0]
+                    common_letters[-i - 1][1] -= 1
+                else:
+                    continue
+
+                # Make sure no repeat
+                if len(res) > 0 and next_char == res[-1]:
+                    common_letters[-i - 1][1] += 1  # Inc back
+                    continue
+                else:
+                    res = res + next_char
+                    common_letters.sort(key=lambda tup: tup[1])
+                    break
+
+        return res if len(res) == len(s) else ""
+
     # Main function
     def main(self):
         arr = [[0, 1, 1], [1, 2, 1], [2, 3, 2], [0, 3, 2], [0, 4, 3],
                [3, 4, 3], [1, 4, 6]]
-        print(self.convertToTitle(28))
+        print(self.reorganizeString("aabaabb"))
 
 
 solution = Solution()
