@@ -365,11 +365,63 @@ class Solution:
 
         return res if len(res) == len(s) else ""
 
+    # 20230824: Text Justificationhttps://leetcode.com/problems/text-justification/
+    def fullJustify(self, words: list[str], maxWidth: int) -> list[str]:
+        # Find how many words can fit on the next line, + 1 space after each word
+        from math import ceil
+
+        res = []
+
+        while len(words) > 0:
+            current_word_count = 0
+            current_line_length = 0
+            current_line_length_without_space = 0
+
+            while True:
+                if current_word_count >= len(words):
+                    break
+
+                current_word = words[current_word_count]
+
+                if len(current_word) + current_line_length <= maxWidth:
+                    current_word_count += 1
+                    current_line_length += 1 + len(
+                        current_word)  # Extra 1 for space
+                    current_line_length_without_space += len(current_word)
+                else:
+                    break
+
+            # Join word together with space padding
+            total_space_needed = maxWidth - current_line_length_without_space
+
+            if current_word_count == 1 or current_word_count == len(words):
+                next_line = " ".join(words[:current_word_count]) + " " * (
+                    total_space_needed - current_word_count + 1)
+            else:
+                word_count = current_word_count
+
+                next_line = ""
+
+                for word in words[:current_word_count]:
+                    next_line += word
+                    if word_count == 1:
+                        space = 0
+                    else:
+                        space = ceil(total_space_needed / (word_count - 1))
+                    total_space_needed -= space
+                    next_line += space * " "
+                    word_count -= 1
+
+            res.append(next_line.ljust(maxWidth))
+
+            words = words[current_word_count:]
+
+        return res
+
     # Main function
     def main(self):
-        arr = [[0, 1, 1], [1, 2, 1], [2, 3, 2], [0, 3, 2], [0, 4, 3],
-               [3, 4, 3], [1, 4, 6]]
-        print(self.reorganizeString("aabaabb"))
+        arr = ["This", "is", "an", "example", "of", "text", "justification."]
+        print(self.fullJustify(arr, 16))
 
 
 solution = Solution()
