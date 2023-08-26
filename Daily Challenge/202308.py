@@ -443,10 +443,25 @@ class Solution:
 
         return mem[len(s1)][len(s2)]
 
+    # 20230826: Maximum Length of Pair Chain https://leetcode.com/problems/maximum-length-of-pair-chain/
+    def findLongestChain(self, pairs: list[list[int]]) -> int:
+        # Sort by second element
+        pairs.sort(key=lambda pair: pair[1])
+
+        # Choose the smallest second pair
+        res = []
+        for pair in pairs:
+            if len(res) >= 1 and pair[0] > res[-1][1]:
+                res.append(pair)
+            elif len(res) == 0:
+                res.append(pair)
+        print(res)
+        return len(res)
+
     # Main function
     def main(self):
-        arr = [""]
-        print(self.isInterleave("aabcc", "dbbca", "aadbbcbcac"))
+        arr = [[1, 2], [7, 8], [4, 5]]
+        print(self.findLongestChain(arr))
 
 
 solution = Solution()
