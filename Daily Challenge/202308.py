@@ -418,10 +418,35 @@ class Solution:
 
         return res
 
+    # 20230825: Interleaving String https://leetcode.com/problems/interleaving-string/
+    def isInterleave(self, s1: str, s2: str, s3: str) -> bool:
+        # Check if can interleave s1 and s2 to form s3 using Dynamic Programming
+        # mem[i][j] is True if s1[0:i] and s2[0:j] can interleave to form s3[0:i+j]
+        # mem[i][j] = mem[i-1][j] if s1[i] == s3[i+j]
+        # mem[i][j] = mem[i][j-1] if s2[j] == s3[i+j]
+        # mem[i][j] = False otherwise
+
+        if len(s1) + len(s2) != len(s3):
+            return False
+
+        mem = [[False for _ in range(len(s2) + 1)] for _ in range(len(s1) + 1)]
+        mem[0][0] = True
+
+        for i in range(len(s1) + 1):
+            for j in range(len(s2) + 1):
+                if i == j == 0:
+                    continue
+                if i - 1 >= 0 and s1[i - 1] == s3[i + j - 1]:
+                    mem[i][j] |= mem[i - 1][j]
+                if j - 1 >= 0 and s2[j - 1] == s3[i + j - 1]:
+                    mem[i][j] |= mem[i][j - 1]
+
+        return mem[len(s1)][len(s2)]
+
     # Main function
     def main(self):
-        arr = ["This", "is", "an", "example", "of", "text", "justification."]
-        print(self.fullJustify(arr, 16))
+        arr = [""]
+        print(self.isInterleave("aabcc", "dbbca", "aadbbcbcac"))
 
 
 solution = Solution()
