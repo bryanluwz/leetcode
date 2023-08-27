@@ -458,10 +458,53 @@ class Solution:
         print(res)
         return len(res)
 
+    # 20230827: Frog Jump https://leetcode.com/problems/frog-jump/
+    def canCross(self, stones: list[int]) -> bool:
+        # DP: idk man i copied from https://leetcode.com/problems/frog-jump/solutions/3677093/simple-top-down-and-bottom-up-dp-solutions/
+        if stones[1] - stones[0] != 1:
+            return False
+
+        if len(stones) == 2:
+            if stones[0] == 0 and stones[1] == 1:
+                return True
+
+        dp = {}
+
+        for stone in stones:
+            dp[stone] = set()
+
+        dp[0].add(0)
+
+        for stone in stones:
+            for k in dp[stone]:
+                if k - 1 > 0 and stone + k - 1 in dp:
+                    dp[stone + k - 1].add(k - 1)
+                if stone + k in dp:
+                    dp[stone + k].add(k)
+                if stone + k + 1 in dp:
+                    dp[stone + k + 1].add(k + 1)
+
+        return len(dp[stones[-1]]) > 0
+
+        # def recursive(currentStone: int, currentJump: int):
+        #     if currentStone == stones[-1]:
+        #         return True
+
+        #     if currentStone not in stones or currentJump == 0:
+        #         return False
+
+        #     ret = recursive(currentStone + currentJump - 1, currentJump - 1)
+        #     ret |= recursive(currentStone + currentJump, currentJump)
+        #     ret |= recursive(currentStone + currentJump + 1, currentJump + 1)
+
+        #     return ret
+
+        # return recursive(1, 1)
+
     # Main function
     def main(self):
-        arr = [[1, 2], [7, 8], [4, 5]]
-        print(self.findLongestChain(arr))
+        arr = [0, 1, 3, 5, 6, 8, 12, 17]
+        print(self.canCross(arr))
 
 
 solution = Solution()
