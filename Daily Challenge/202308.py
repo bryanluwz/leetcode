@@ -507,5 +507,24 @@ class Solution:
         print(self.canCross(arr))
 
 
+# 20230828: Implement Stack using Queues https://leetcode.com/problems/implement-stack-using-queues/
+class MyStack:
+
+    def __init__(self):
+        self.queue = []
+
+    def push(self, x: int) -> None:
+        self.queue.append(x)
+
+    def pop(self) -> int:
+        return self.queue.pop(-1)
+
+    def top(self) -> int:
+        return self.queue[-1]
+
+    def empty(self) -> bool:
+        return len(self.queue) == 0
+
+
 solution = Solution()
 solution.main()
