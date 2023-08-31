@@ -501,7 +501,7 @@ class Solution:
 
         # return recursive(1, 1)
 
-    # Minimum Penalty for a Shop https://leetcode.com/problems/minimum-penalty-for-a-shop/
+    # 20230829: Minimum Penalty for a Shop https://leetcode.com/problems/minimum-penalty-for-a-shop/
     def bestClosingTime(self, customers: str) -> int:
         optimal_closing_time = -1
         minimum_penalty = 696969
@@ -524,10 +524,62 @@ class Solution:
 
         return optimal_closing_time
 
+    # 20230830: Minimum Replacements to Sort the Array https://leetcode.com/problems/minimum-replacements-to-sort-the-array/
+    # Ok i didnt solve this on my own
+    def minimumReplacement(self, nums: list[int]) -> int:
+        operations = 0
+        prev_bound = nums[-1]
+
+        for num in reversed(nums[:-1]):
+            no_of_times = (num + prev_bound - 1) // prev_bound
+            operations += no_of_times - 1
+            prev_bound = num // no_of_times
+
+        return operations
+
+    # 20280831: Minimum Number of Taps to Open to Water a Garden https://leetcode.com/problems/minimum-number-of-taps-to-open-to-water-a-garden/
+    def minTaps(self, n: int, ranges: list[int]) -> int:
+        # We need to choose the min number of these ranges
+        # to continuously cover from 0 to n (inclusive)
+        # Create a list of the ranges
+        range_list = [(i - r, i + r) for i, r in enumerate(ranges)]
+
+        # Sort ranges by left end
+        range_list.sort(key=lambda r: r[0])
+
+        # Find one that is <= current_point, and reaches the farthest
+        current_point = 0
+        current_index = 0
+        count = 0
+
+        while current_point < n:
+            opt_tap_index = 0
+            is_tap = False
+            farthest_right = 0
+
+            for r in range_list[current_index:]:
+                if r[0] <= current_point:
+                    if r[1] > farthest_right:
+                        opt_tap_index = range_list.index(r)
+                        farthest_right = r[1]
+                        is_tap = True
+                else:
+                    break
+
+            if not is_tap:
+                return -1
+
+            # Once we got the best tap, we update
+            count += 1
+            current_index = opt_tap_index + 1
+            current_point = farthest_right
+
+        return count
+
     # Main function
     def main(self):
-        arr = "help"
-        print(self.bestClosingTime(arr))
+        arr = [1, 2, 1, 0, 2, 1, 0, 1]
+        print(self.minTaps(len(arr) - 1, arr))
 
 
 # 20230828: Implement Stack using Queues https://leetcode.com/problems/implement-stack-using-queues/
